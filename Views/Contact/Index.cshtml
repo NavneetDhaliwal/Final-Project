@@ -1,0 +1,131 @@
+﻿@model IEnumerable<WebApplication1.Models.Contact>
+﻿
+@using Microsoft.AspNetCore.Identity
+@using WebApplication1.Areas.Identity.Data
+
+@inject SignInManager<WebAuthAppUser> SignInManager
+@inject UserManager<WebAuthAppUser> UserManager
+
+
+@{
+    ViewData["Title"] = "Index";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+<div class="conatiner p-3">
+    <div class="row pt-4 pb-2">
+        <div class="col-6">
+            <h2 class=""> Contact List</h2>
+        </div>
+        <div class="col-6 text-end">
+            @if (User.IsInRole("Admin") || (User.IsInRole("User")))
+            {
+                <a asp-controller="Contact" asp-action="Create" class=" text-primary">
+                    <i class="bi bi-plus-square"></i> &nbsp;
+                Create New
+            </a>
+            }
+        </div>
+
+    </div>
+    <partial name="Notification" />
+<table class="table">
+    <thead>
+        <tr>
+            <th>
+                FirstName
+            </th>
+            <th>
+                LastName
+            </th>
+            <th>
+                Email
+            </th>
+            <th>
+                Address
+            </th>
+            <th>
+                City
+            </th>
+            <th>
+                State
+            </th>
+            <th>
+                Status
+            </th>
+            <th>
+                Zip
+            </th>
+            <th></th>
+        </tr>
+    </thead>
+        <tbody>
+          
+
+                @foreach (var item in Model) {
+        <tr>
+            <td>
+                @item.FirstName
+            </td>
+            <td>
+                @item.LastName
+            </td>
+            <td>
+                @item.Email
+            </td>
+            <td>
+                @item.Address
+            </td>
+            <td>
+                @item.City
+            </td>
+            <td>
+                 @item.State
+            </td> 
+            <td>
+                @item.Status
+            </td>
+            <td>
+                 @item.Zip
+            </td>
+            <td>
+                        @if (User.IsInRole("Admin"))
+                        {
+                            <div>
+
+                            <a asp-action="Details" class="btn btn-info"  asp-route-id="@item.Id">Details</a>
+                                <br /> <a asp-action="Edit" class="btn btn-secondary" asp-route-id="@item.Id"> Edit</a>
+                                <br /><a asp-action="Delete" class="btn btn-danger" asp-route-id="@item.Id">Delete</a>
+
+                            </div>
+                        }
+                            @if (User.IsInRole("Manager"))
+                            {
+                            <a asp-action="Edit" class="btn btn-danger"  asp-route-id="@item.Id"> Status-change </a>
+                            }
+                            @if (User.IsInRole("User"))
+                            {
+                            @if (item.UserId == ViewBag.UserId)
+                            {
+                                <a asp-action="Edit" class="btn btn-secondary" asp-route-id="@item.Id">Edit</a>
+                                <br />
+                                <a asp-action="Details" class="btn btn-info" asp-route-id="@item.Id">Details</a>
+                                <br /> <a asp-action="Delete" class="btn btn-danger" asp-route-id="@item.Id">Delete</a>
+                            }
+                            else
+                            {
+                                @item.UserId  
+                                <br />
+
+                                <br />
+
+                                @ViewBag.UserId
+                            }
+                        }
+                        
+                    </td>
+        </tr>
+             }
+            
+        </tbody>
+    </table>
+</div>
